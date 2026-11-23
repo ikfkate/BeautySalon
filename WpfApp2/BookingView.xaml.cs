@@ -17,6 +17,7 @@ namespace WpfApp2
     public partial class BookingView : UserControl
     {
         private int currentStep = 1;
+        private int maxReachedStep = 1; // максимальный достигнутый шаг
         private string selectedProcedure = "";
         private string selectedMaster = ""; 
         private string selectedTime = "";   
@@ -46,13 +47,16 @@ namespace WpfApp2
             if (currentStep < 5)
             {
                 currentStep++;
+                // Обновляем максимальный достигнутый шаг
+                if (currentStep > maxReachedStep)
+                {
+                    maxReachedStep = currentStep;
+                }
                 UpdateStepUI();
             }
             else
             {
-
                 MessageBox.Show("Вы успешно записаны!", "Успех");
-                // Сообщение главноему окну что записть завершена
                 BookingCompleted?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -75,7 +79,6 @@ namespace WpfApp2
             HideAllSteps();
             BtnBack.Visibility = currentStep > 1 ? Visibility.Visible : Visibility.Collapsed;
 
-            // При переходе на новый шаг сбрасываем выбор и выключаем кнопку "Далее"
             isItemSelected = false;
             BtnNext.IsEnabled = false;
             BtnNext.Visibility = Visibility.Collapsed;
@@ -106,8 +109,6 @@ namespace WpfApp2
                     StepTitle.Text = "Шаг 5: Подтверждение";
                     Step5_Confirm.Visibility = Visibility.Visible;
                     BtnNext.Content = "Подтвердить";
-
-                    // На 5 шаге кнопка "Далее" (Подтвердить) должна быть активна сразу,так как выбор уже сделан
                     BtnNext.IsEnabled = true;
                     BtnNext.Visibility = Visibility.Visible;
                     ConfirmDetails.Text = "Процедура: " + selectedProcedure;
@@ -115,8 +116,50 @@ namespace WpfApp2
                     ConfirmTime.Text = "Дата и время: 15 октября, " + selectedTime;
                     break;
             }
+
+            // Обновляем вкладки после смены шага
+            UpdateTabs();
         }
 
+
+        // Обновление состояния вкладок
+        private void UpdateTabs()
+        {
+            // Собираем все вкладки в массив для удобства
+            Button[] tabs = { TabStep1, TabStep2, TabStep3, TabStep4, TabStep5 };
+
+            for (int i = 0; i < tabs.Length; i++)
+            {
+                int stepNum = i + 1;
+                if (stepNum == currentStep)
+                {
+                    tabs[i].Tag = "Active"; // Текущий шаг
+                }
+                else if (stepNum <= maxReachedStep)
+                {
+                    tabs[i].Tag = "Completed"; // Пройденный шаг 
+                }
+                else
+                {
+                    tabs[i].Tag = "Disabled"; // Будущий шаг 
+                }
+            }
+        }
+
+        // Клик по вкладке
+        private void Tab_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button clickedTab &&
+                int.TryParse(clickedTab.CommandParameter?.ToString(), out int targetStep))
+            {
+                // Разрешаем переход только на текущий или пройденные шаги
+                if (targetStep <= maxReachedStep && targetStep != currentStep)
+                {
+                    currentStep = targetStep;
+                    UpdateStepUI();
+                }
+            }
+        }
 
         private void Category_Click(object sender, RoutedEventArgs e)
         {
@@ -188,6 +231,7 @@ namespace WpfApp2
         public void ResetView()
         {
             currentStep = 1;
+            maxReachedStep = 1;
             selectedProcedure = "";
             selectedMaster = "";
             selectedTime = "";
