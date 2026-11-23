@@ -1,0 +1,128 @@
+﻿<UserControl x:Class="WpfApp2.BookingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+    <!-- Фон прозрачный, чтобы был виден бежевый фон главного окна -->
+
+    <UserControl.Resources>
+        <!-- Стили для кнопок "Далее" и "Назад" -->
+        <Style x:Key="NextButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="45"/>
+        </Style>
+
+        <Style x:Key="BackButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource SageColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для карточек выбора (Категории, Процедуры, Мастера) -->
+        <Style x:Key="CardButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0DCD5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F9F9F9"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource RoseColor}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Заголовок шага -->
+            <RowDefinition Height="*"/>
+            <!-- Контент шага -->
+            <RowDefinition Height="Auto"/>
+            <!-- Кнопки Назад/Далее -->
+        </Grid.RowDefinitions>
+
+        <!-- ЗАГОЛОВОК ТЕКУЩЕГО ШАГА -->
+        <TextBlock x:Name="StepTitle" Text="Шаг 1: Выберите категорию" 
+                   FontSize="22" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,20"/>
+
+        <!-- КОНТЕНТ (Меняется в зависимости от шага) -->
+        <Grid Grid.Row="1">
+
+            <!-- ШАГ 1: КАТЕГОРИИ -->
+            <StackPanel x:Name="Step1_Categories">
+                <Button Content="💅 Маникюр" Style="{StaticResource CardButtonStyle}" Click="Category_Click" Tag="Маникюр"/>
+                <Button Content="💇‍♀️ Стрижка" Style="{StaticResource CardButtonStyle}" Click="Category_Click" Tag="Стрижка"/>
+                <Button Content="💆‍♀️ Массаж" Style="{StaticResource CardButtonStyle}" Click="Category_Click" Tag="Массаж"/>
+                <Button Content="🎨 Окрашивание" Style="{StaticResource CardButtonStyle}" Click="Category_Click" Tag="Окрашивание"/>
+            </StackPanel>
+
+            <!-- ШАГ 2: ПРОЦЕДУРЫ (Изначально скрыт) -->
+            <StackPanel x:Name="Step2_Procedures" Visibility="Collapsed">
+                <Button Content="Классический маникюр (60 мин, 1500 руб.)" Style="{StaticResource CardButtonStyle}" Click="Procedure_Click"/>
+                <Button Content="Аппаратный маникюр (90 мин, 2000 руб.)" Style="{StaticResource CardButtonStyle}" Click="Procedure_Click"/>
+                <Button Content="Дизайн ногтей (30 мин, 800 руб.)" Style="{StaticResource CardButtonStyle}" Click="Procedure_Click"/>
+            </StackPanel>
+
+            <!-- ШАГ 3: МАСТЕРА (Изначально скрыт) -->
+            <StackPanel x:Name="Step3_Masters" Visibility="Collapsed">
+                <Button Content="👩 Елена (Стаж 5 лет)" Style="{StaticResource CardButtonStyle}" Click="Master_Click"/>
+                <Button Content="👩 Анна (Стаж 3 года)" Style="{StaticResource CardButtonStyle}" Click="Master_Click"/>
+            </StackPanel>
+
+            <!-- ШАГ 4: ВРЕМЯ (Изначально скрыт) -->
+            <StackPanel x:Name="Step4_Time" Visibility="Collapsed">
+                <TextBlock Text="Доступное время на 15 октября:" Foreground="{StaticResource DarkText}" Margin="0,0,0,15"/>
+                <WrapPanel>
+                    <Button Content="10:00" Style="{StaticResource CardButtonStyle}" Width="100" Margin="0,0,10,10" Click="Time_Click"/>
+                    <Button Content="11:30" Style="{StaticResource CardButtonStyle}" Width="100" Margin="0,0,10,10" Click="Time_Click"/>
+                    <Button Content="14:00" Style="{StaticResource CardButtonStyle}" Width="100" Margin="0,0,10,10" Click="Time_Click"/>
+                    <Button Content="16:30" Style="{StaticResource CardButtonStyle}" Width="100" Margin="0,0,10,10" Click="Time_Click"/>
+                </WrapPanel>
+            </StackPanel>
+
+            <!-- ШАГ 5: ПОДТВЕРЖДЕНИЕ (Изначально скрыт) -->
+            <Border x:Name="Step5_Confirm" Visibility="Collapsed" Background="White" CornerRadius="10" Padding="30" Width="500" HorizontalAlignment="Left">
+                <StackPanel>
+                    <TextBlock Text="Ваша запись:" FontSize="20" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,20"/>
+                    <TextBlock x:Name="ConfirmDetails" Text="Процедура: ..." FontSize="16" Foreground="{StaticResource DarkText}" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="ConfirmMaster" Text="Мастер: ..." FontSize="16" Foreground="{StaticResource DarkText}" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="ConfirmTime" Text="Дата и время: ..." FontSize="16" Foreground="{StaticResource DarkText}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- КНОПКИ НАВИГАЦИИ -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button x:Name="BtnBack" Content="← Назад" Style="{StaticResource BackButtonStyle}" Margin="0,0,15,0" Visibility="Collapsed" Click="BtnBack_Click"/>
+            <Button x:Name="BtnNext" Content="Далее →" Style="{StaticResource NextButtonStyle}" Click="BtnNext_Click" Visibility="Collapsed"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

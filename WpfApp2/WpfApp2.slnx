@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="../BLL/BLL.csproj" Id="c35b5122-68bf-4c10-a71f-1287342ad557" />
+  <Project Path="../DAL/DAL.csproj" Id="dbb403f0-8710-4fd8-ab91-e2502a9c7687" />
+  <Project Path="WpfApp2.csproj" />
+</Solution>

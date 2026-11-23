@@ -1,0 +1,211 @@
+﻿<Window x:Class="WpfApp2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WpfApp2"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        Title="Салон красоты" Height="720" Width="1100"
+        WindowStartupLocation="CenterScreen"
+        Background="#F2EFEA">
+
+    <!-- Ресурсы окна (цвета и стили) -->
+    <Window.Resources>
+
+        <!-- Стиль для кнопок левого меню -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkText}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="20,15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Подсветка при наведении -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E0DCD5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- Основная сетка: 2 колонки (Меню и Контент) -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левое меню -->
+        <Border Grid.Column="0" Background="White" BorderBrush="#E0DCD5" BorderThickness="0,0,1,0">
+            <StackPanel>
+                <!-- Логотип -->
+                <TextBlock Text="BEAUTY&#x0a;SALON" FontSize="22" FontWeight="Bold" 
+                           Foreground="{StaticResource SageColor}" 
+                           HorizontalAlignment="Center" Margin="0,30,0,40" TextAlignment="Center"/>
+
+                <!-- Кнопки меню -->
+                <Button Content="🏠 Главная" Style="{StaticResource MenuButtonStyle}" Click="BtnHome_Click"/>
+                <Button Content="📅 Личный кабинет" Style="{StaticResource MenuButtonStyle}" Click="BtnCabinet_Click"/>
+                <Button x:Name="BtnManagement" Content="⚙️ Управление" Style="{StaticResource MenuButtonStyle}" Click="BtnManagement_Click"/>
+                <!-- Кнопка отчетов (скрыта для клиента) -->
+                <Button x:Name="BtnReports" Content="📊 Отчеты" Style="{StaticResource MenuButtonStyle}" Click="BtnReports_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Центральная область -->
+        <Grid Grid.Column="1" Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок текущей страницы -->
+            <TextBlock x:Name="PageTitle" Text="Главная" FontSize="28" FontWeight="Bold" 
+                       Foreground="{StaticResource DarkText}" Margin="0,0,0,20"/>
+
+            <!-- Контейнер для переключения страниц -->
+            <Grid Grid.Row="1">
+
+                <!-- СТРАНИЦА: Главная -->
+                <StackPanel x:Name="HomePage" Visibility="Visible" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Добро пожаловать в наш салон красоты!" FontSize="24" 
+                               Foreground="{StaticResource DarkText}" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    <TextBlock Text="Мы рады видеть вас! Здесь вы можете записаться на любую процедуру," 
+                               FontSize="16" Foreground="{StaticResource DarkText}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="а также управлять своими записями в личном кабинете." 
+                               FontSize="16" Foreground="{StaticResource DarkText}" HorizontalAlignment="Center" Margin="0,0,0,40"/>
+
+                    <!-- Большая кнопка записи -->
+                    <Button Content="Записаться на процедуру" Style="{StaticResource PrimaryButtonStyle}" 
+                            Width="350" Height="60" Click="BtnBook_Click"/>
+                </StackPanel>
+
+                <!-- СТРАНИЦА: Личный кабинет -->
+                <StackPanel x:Name="CabinetPage" Visibility="Collapsed">
+                    <TextBlock Text="Ваши данные:" FontSize="18" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,10"/>
+                    <TextBlock Text="ФИО: Иванова Анна" FontSize="16" Foreground="{StaticResource DarkText}"/>
+                    <TextBlock Text="Телефон: +7 (999) 123-45-67" FontSize="16" Foreground="{StaticResource DarkText}" Margin="0,5,0,30"/>
+
+                    <TextBlock Text="Активные записи:" FontSize="18" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,10"/>
+                    <!-- Карточка записи -->
+                    <Border Background="White" CornerRadius="8" Padding="15" Width="500" HorizontalAlignment="Left">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Маникюр" FontWeight="Bold" Foreground="{StaticResource DarkText}"/>
+                                <TextBlock Text="15 октября, 14:00 • Мастер: Елена" Foreground="{StaticResource DarkText}" Margin="0,5,0,0"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Отменить" Background="#E8C3C8" Foreground="White" 
+                                    BorderThickness="0" Padding="10,5" VerticalAlignment="Center" Cursor="Hand"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <!-- СТРАНИЦА: Управление -->
+                <!-- <StackPanel x:Name="ManagementPage" Visibility="Collapsed">
+                    <TextBlock Text="Управление процедурами" FontSize="20" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,20"/>
+                </StackPanel>  -->
+                <Grid x:Name="ManagementPage" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Левая часть: Таблица процедур -->
+                    <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                        <TextBlock Text="Список процедур" FontSize="18" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,10"/>
+                        <DataGrid x:Name="ProceduresGrid" AutoGenerateColumns="False" 
+                  Height="400" Background="White" BorderBrush="#E0DCD5" 
+                  CanUserAddRows="False" IsReadOnly="True" 
+                  SelectionChanged="ProceduresGrid_SelectionChanged"
+                  SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="40"/>
+                                <DataGridTextColumn Header="Название" Binding="{Binding Title}" Width="*"/>
+                                <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="120"/>
+                                <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat='{}{0:F2}'}" Width="80"/>
+                                <DataGridTextColumn Header="Мин." Binding="{Binding DurationMinutes}" Width="50"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+
+                    <!-- Правая часть: Форма добавления/редактирования -->
+                    <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Данные процедуры" FontSize="18" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Название:" Foreground="{StaticResource DarkText}"/>
+                            <TextBox x:Name="TxtTitle" Padding="5" Margin="0,5,0,10"/>
+
+                            <TextBlock Text="Категория:" Foreground="{StaticResource DarkText}"/>
+                            <TextBox x:Name="TxtCategory" Padding="5" Margin="0,5,0,10"/>
+
+                            <TextBlock Text="Длительность (мин):" Foreground="{StaticResource DarkText}"/>
+                            <TextBox x:Name="TxtDuration" Padding="5" Margin="0,5,0,10"/>
+
+                            <TextBlock Text="Цена:" Foreground="{StaticResource DarkText}"/>
+                            <TextBox x:Name="TxtPrice" Padding="5" Margin="0,5,0,10"/>
+
+                            <TextBlock Text="Описание:" Foreground="{StaticResource DarkText}"/>
+                            <TextBox x:Name="TxtDescription" Padding="5" Margin="0,5,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                            <!-- Кнопки управления -->
+                            <Button Content="Добавить" Style="{StaticResource PrimaryButtonStyle}" Height="40" Margin="0,0,0,10" Click="BtnAddProcedure_Click"/>
+                            <Button Content="Обновить" Style="{StaticResource BackButtonStyle}" Height="40" Margin="0,0,0,10" Click="BtnUpdateProcedure_Click"/>
+                            <Button Content="Удалить" Background="#E76F51" Foreground="White" FontWeight="Bold" Height="40" BorderThickness="0" Cursor="Hand" Click="BtnDeleteProcedure_Click">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- СТРАНИЦА: Отчеты -->
+                 <StackPanel x:Name="ReportsPage" Visibility="Collapsed">
+                    <TextBlock Text="Отчет по процедурам " FontSize="18" FontWeight="Bold" Foreground="{StaticResource DarkText}" Margin="0,0,0,20"/>
+
+                    <!-- Таблица для вывода данных -->
+                    <!-- <DataGrid x:Name="AppointmentsGrid" AutoGenerateColumns="True" 
+                          Height="400" Background="White" BorderBrush="#E0DCD5" 
+                          CanUserAddRows="False" IsReadOnly="True" Margin="0,0,0,15"/> -->
+
+                    <!-- График -->
+                    <lvc:CartesianChart x:Name="ProcedureChart" Height="300" Background="White" Margin="0,20,0,0">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Процедуры" FontSize="12" />
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Цена (руб.)" FontSize="12" />
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+
+                    <!-- Кнопка обновления (опционально) -->
+                    <Button Content="Обновить данные" Style="{StaticResource PrimaryButtonStyle}" Width="200" Height="40" Click="BtnUpdateReports_Click"/>
+                </StackPanel>
+
+                <!-- СТРАНИЦА: ЗАПИСЬ НА ПРОЦЕДУРУ -->
+                <local:BookingView x:Name="BookingPage" Visibility="Collapsed"/> 
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
